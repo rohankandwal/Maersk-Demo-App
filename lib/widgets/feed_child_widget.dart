@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:demo/feed_model.dart';
 import 'package:demo/widgets/favorite_button_widget.dart';
 import 'package:demo/widgets/like_button_widget.dart';
@@ -64,7 +66,10 @@ class _FeedChildWidgetState extends State<FeedChildWidget> {
     return Container(
       width: double.infinity,
       height: 100,
-      color: Colors.red,
+      child: Image.file(
+        File(widget.feedModel.mediaPath),
+        fit: BoxFit.cover,
+      ),
     );
   }
 

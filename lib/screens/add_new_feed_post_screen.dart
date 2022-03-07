@@ -2,6 +2,7 @@ import 'package:demo/feed_model.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddNewFeedPostScreen extends StatefulWidget {
   const AddNewFeedPostScreen({Key? key}) : super(key: key);
@@ -15,6 +16,9 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   final TextEditingController _discriptionController = TextEditingController();
   final _formState = GlobalKey<FormState>();
   late Box _feedBox;
+
+  final ImagePicker _picker = ImagePicker();
+  String _filePath = "";
 
   @override
   void initState() {
@@ -113,18 +117,33 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   }
 
   Widget _getMediaButton() {
-    return ElevatedButton(onPressed: () {}, child: const Text("Get Media"));
+    return ElevatedButton(
+        onPressed: () async {
+          final XFile? _xFile =
+              await _picker.pickImage(source: ImageSource.gallery);
+          if (_xFile != null) {
+            _filePath = _xFile.path;
+            print("Got file path = ${_xFile.path}");
+          }
+        },
+        child: const Text("Get Media"));
   }
 
   Widget _getSaveButton() {
     return ElevatedButton(
         onPressed: () {
           if (_formState.currentState!.validate()) {
+            if (_filePath.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Please select an image"),
+              ));
+              return;
+            }
             _feedBox.add(FeedModel(
                 id: DateTime.now().millisecondsSinceEpoch,
                 description: _discriptionController.text,
                 title: _titleController.text,
-                mediaPath: "",
+                mediaPath: _filePath,
                 isFavorite: 0,
                 isLiked: 0));
             Navigator.pop(context);
