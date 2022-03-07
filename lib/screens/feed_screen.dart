@@ -1,3 +1,4 @@
+import 'package:demo/screens/add_new_feed_post_screen.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:demo/widgets/feed_child_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,13 @@ class _FeedScreenState extends State<FeedScreen> {
   /// Gets the floating action button which will redirect to create new screen
   Widget _getFloatingActionButton() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddNewFeedPostScreen(),
+            ));
+      },
       child: const Icon(Icons.add),
     );
   }
