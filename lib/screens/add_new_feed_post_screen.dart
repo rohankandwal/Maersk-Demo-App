@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:demo/feed_model.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -50,20 +52,23 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
 
   /// Get the body for UI
   Widget _getBody() {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Form(
-        key: _formState,
-        child: Column(
-          children: [
-            _getTitle(),
-            _getSpacing(),
-            _getDescription(),
-            _getSpacing(),
-            _getMediaButton(),
-            _getSpacing(),
-            _getSaveButton(),
-          ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formState,
+          child: Column(
+            children: [
+              _getTitle(),
+              _getSpacing(),
+              _getDescription(),
+              _getSpacing(),
+              _getMediaPreview(),
+              _getMediaButton(),
+              _getSpacing(),
+              _getSaveButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -116,13 +121,29 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
     );
   }
 
+  Widget _getMediaPreview() {
+    return Visibility(
+        visible: _filePath.isNotEmpty,
+        child: Container(
+          width: double.infinity,
+          height: 200,
+          padding: EdgeInsets.all(16),
+          child: Image.file(
+            File(_filePath),
+            fit: BoxFit.cover,
+          ),
+        ));
+  }
+
   Widget _getMediaButton() {
     return ElevatedButton(
         onPressed: () async {
           final XFile? _xFile =
               await _picker.pickImage(source: ImageSource.gallery);
           if (_xFile != null) {
-            _filePath = _xFile.path;
+            setState(() {
+              _filePath = _xFile.path;
+            });
             print("Got file path = ${_xFile.path}");
           }
         },
