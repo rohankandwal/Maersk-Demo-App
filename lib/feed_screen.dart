@@ -1,3 +1,5 @@
+import 'package:demo/constants.dart';
+import 'package:demo/feed_child_widget.dart';
 import 'package:flutter/material.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -51,7 +53,7 @@ class _FeedScreenState extends State<FeedScreen> {
           child: _getFeedItems(),
           left: 0,
           right: 0,
-          top: 120,
+          top: 120, //Todo check error for int conversion
           bottom: 0,
         )
       ],
@@ -61,7 +63,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _getSearchField() {
     return Container(
       padding: const EdgeInsets.all(16),
-      height: 120,
+      height: Constants.FEED_SEARCH_BAR_HEIGHT,
       child: TextFormField(
         controller: _searchController,
         decoration: InputDecoration(
@@ -84,10 +86,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _getFeedItems() {
     return ListView.separated(
         itemBuilder: (context, index) {
-          return Container(
-            width: double.infinity,
-            height: 100,
-            color: Colors.red,
+          return FeedChildWidget(
+            key: UniqueKey(),
           );
         },
         separatorBuilder: (context, index) {
