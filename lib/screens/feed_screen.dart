@@ -110,8 +110,12 @@ class _FeedScreenState extends State<FeedScreen> {
               ? box.values.toList() // whole list
               : box.values
                   .where((c) =>
-                      c.title.toLowerCase().contains(_searchString.toLowerCase()) ||
-                      c.description.toLowerCase().contains(_searchString.toLowerCase()))
+                      c.title
+                          .toLowerCase()
+                          .contains(_searchString.toLowerCase()) ||
+                      c.description
+                          .toLowerCase()
+                          .contains(_searchString.toLowerCase()))
                   .toList();
           if (results.isEmpty) {
             return const Center(
@@ -126,50 +130,27 @@ class _FeedScreenState extends State<FeedScreen> {
                 key: UniqueKey(),
                 feedModel: _feedModel,
                 favoriteButtonPressed: () async {
-                  /*_feedModel.isFavorite == 0 ? 1 : 0;
-                  await _feedModel.save();*/
-                  /*_updateLikeAndFavorite(
-                      box: results,
-                      index: index,
-                      isLiked: _feedModel.isLiked,
-                      isFavorite: _feedModel.isFavorite == 0 ? 1 : 0);*/
+                  if (results[index].isFavorite == 0) {
+                    results[index].isFavorite = 1;
+                  } else {
+                    results[index].isFavorite = 0;
+                  }
+                  results[index].save();
+                  // box.putAt(index, results[index]);
                 },
                 likeButtonPressed: () async {
-                  /*_feedModel.isLiked == 0 ? 1 : 0;
-                  await _feedModel.save();
-                  print("Box data = ${_feedModel.toString()}");*/
-                  /*_updateLikeAndFavorite(
-                      box: box,
-                      index: index,
-                      isLiked: _feedModel.isLiked == 0 ? 1 : 0,
-                      isFavorite: _feedModel.isFavorite);*/
+                  if (results[index].isLiked == 0) {
+                    results[index].isLiked = 1;
+                  } else {
+                    results[index].isLiked = 0;
+                  }
+                  results[index].save();
+                  // box.putAt(index, results[index]);
                 },
               );
             },
           );
         });
-  }
-
-  _updateLikeAndFavorite(
-      {required final Box box,
-      required final index,
-      required final int isLiked,
-      required final int isFavorite}) async {
-    final _oldFeed = box.get(index);
-    final _feedModel = FeedModel(
-      id: box.get(index)!.id,
-      title: box.get(index)!.title,
-      description: box.get(index)!.description,
-      mediaPath: box.get(index)!.mediaPath,
-      isFavorite: isFavorite,
-      isLiked: isLiked,
-    );
-    await box.deleteAt(index);
-    if (box.length == 0) {
-      await box.add(_feedModel);
-    } else {
-      await box.putAt(index, _feedModel);
-    }
   }
 
   @override
