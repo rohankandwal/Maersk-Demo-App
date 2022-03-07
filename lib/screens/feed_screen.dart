@@ -1,5 +1,5 @@
-import 'package:demo/constants.dart';
-import 'package:demo/feed_child_widget.dart';
+import 'package:demo/utils/constants.dart';
+import 'package:demo/widgets/feed_child_widget.dart';
 import 'package:flutter/material.dart';
 
 class FeedScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:demo/favorite_button_widget.dart';
-import 'package:demo/like_button_widget.dart';
+import 'package:demo/widgets/favorite_button_widget.dart';
+import 'package:demo/widgets/like_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class FeedChildWidget extends StatefulWidget {

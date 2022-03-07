@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'feed_screen.dart';
+import 'screens/feed_screen.dart';
 
 void main() {
   runApp(const MyApp());
