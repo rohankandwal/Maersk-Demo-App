@@ -1,4 +1,3 @@
-import 'package:demo/database/adapter/feed_model_adapter.dart';
 import 'package:demo/feed_model.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:flutter/material.dart';

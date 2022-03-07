@@ -124,7 +124,9 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
                 id: DateTime.now().millisecondsSinceEpoch,
                 description: _discriptionController.text,
                 title: _titleController.text,
-                mediaPath: ""));
+                mediaPath: "",
+                isFavorite: 0,
+                isLiked: 0));
             Navigator.pop(context);
           }
         },

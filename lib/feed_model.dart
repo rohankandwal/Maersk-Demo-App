@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'feed_model.g.dart';
+
 @HiveType(typeId: 0)
 class FeedModel extends HiveObject {
   @HiveField(0)
@@ -11,9 +13,9 @@ class FeedModel extends HiveObject {
   @HiveField(3)
   final String mediaPath;
   @HiveField(4)
-  final int isLiked;
+  int isLiked;
   @HiveField(5)
-  final int isFavorite;
+  int isFavorite;
 
   FeedModel(
       {required this.id,

@@ -16,6 +16,8 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  String _searchString = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +85,11 @@ class _FeedScreenState extends State<FeedScreen> {
           enabledBorder: _getBorder(Colors.black),
           errorBorder: _getBorder(Colors.red),
         ),
+        onChanged: (value) {
+          setState(() {
+            _searchString = value;
+          });
+        },
       ),
     );
   }
@@ -98,34 +105,71 @@ class _FeedScreenState extends State<FeedScreen> {
     return ValueListenableBuilder(
         valueListenable: Hive.box<FeedModel>(Constants.FEED_DB).listenable(),
         builder: (context, Box<FeedModel> box, _) {
-          if (box.values.isEmpty) {
+          print("SearchString = $_searchString");
+          var results = _searchString.isEmpty
+              ? box.values.toList() // whole list
+              : box.values
+                  .where((c) =>
+                      c.title.toLowerCase().contains(_searchString.toLowerCase()) ||
+                      c.description.toLowerCase().contains(_searchString.toLowerCase()))
+                  .toList();
+          if (results.isEmpty) {
             return const Center(
               child: Text("No data"),
             );
           }
           return ListView.builder(
-            itemCount: box.values.length,
+            itemCount: results.length,
             itemBuilder: (context, index) {
+              final _feedModel = results[index];
               return FeedChildWidget(
                 key: UniqueKey(),
-                feedModel: box.getAt(index)!,
+                feedModel: _feedModel,
+                favoriteButtonPressed: () async {
+                  /*_feedModel.isFavorite == 0 ? 1 : 0;
+                  await _feedModel.save();*/
+                  /*_updateLikeAndFavorite(
+                      box: results,
+                      index: index,
+                      isLiked: _feedModel.isLiked,
+                      isFavorite: _feedModel.isFavorite == 0 ? 1 : 0);*/
+                },
+                likeButtonPressed: () async {
+                  /*_feedModel.isLiked == 0 ? 1 : 0;
+                  await _feedModel.save();
+                  print("Box data = ${_feedModel.toString()}");*/
+                  /*_updateLikeAndFavorite(
+                      box: box,
+                      index: index,
+                      isLiked: _feedModel.isLiked == 0 ? 1 : 0,
+                      isFavorite: _feedModel.isFavorite);*/
+                },
               );
             },
           );
         });
-    /*return ListView.separated(
-        itemBuilder: (context, index) {
-          return FeedChildWidget(
-            key: UniqueKey(),
-            feedModel: _feeds[index],
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            height: 10,
-          );
-        },
-        itemCount: _feeds.length);*/
+  }
+
+  _updateLikeAndFavorite(
+      {required final Box box,
+      required final index,
+      required final int isLiked,
+      required final int isFavorite}) async {
+    final _oldFeed = box.get(index);
+    final _feedModel = FeedModel(
+      id: box.get(index)!.id,
+      title: box.get(index)!.title,
+      description: box.get(index)!.description,
+      mediaPath: box.get(index)!.mediaPath,
+      isFavorite: isFavorite,
+      isLiked: isLiked,
+    );
+    await box.deleteAt(index);
+    if (box.length == 0) {
+      await box.add(_feedModel);
+    } else {
+      await box.putAt(index, _feedModel);
+    }
   }
 
   @override

@@ -5,8 +5,15 @@ import 'package:flutter/material.dart';
 
 class FeedChildWidget extends StatefulWidget {
   final FeedModel feedModel;
+  final Function likeButtonPressed;
+  final Function favoriteButtonPressed;
 
-  const FeedChildWidget({Key? key, required this.feedModel}) : super(key: key);
+  const FeedChildWidget({
+    Key? key,
+    required this.feedModel,
+    required this.likeButtonPressed,
+    required this.favoriteButtonPressed,
+  }) : super(key: key);
 
   @override
   State<FeedChildWidget> createState() => _FeedChildWidgetState();
@@ -74,10 +81,17 @@ class _FeedChildWidgetState extends State<FeedChildWidget> {
   }
 
   Widget _getLikeButton() {
-    return const LikeButtonWidget();
+    return LikeButtonWidget(
+      isLiked: widget.feedModel.isLiked == 1, // 0 means false, 1 means true
+      likeButtonPressed: () => widget.likeButtonPressed(),
+    );
   }
 
   Widget _getFavoriteButton() {
-    return const FavoriteButtonWidget();
+    return FavoriteButtonWidget(
+      isFavorite:
+          widget.feedModel.isFavorite == 1, // 0 means false, 1 means true
+      favoriteButtonPressed: () => widget.favoriteButtonPressed(),
+    );
   }
 }
