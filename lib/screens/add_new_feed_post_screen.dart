@@ -1,4 +1,7 @@
+import 'package:demo/feed_model.dart';
+import 'package:demo/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class AddNewFeedPostScreen extends StatefulWidget {
   const AddNewFeedPostScreen({Key? key}) : super(key: key);
@@ -9,8 +12,19 @@ class AddNewFeedPostScreen extends StatefulWidget {
 
 class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _discriptionController = TextEditingController();
   final _formState = GlobalKey<FormState>();
+  late Box _feedBox;
+
+  @override
+  void initState() {
+    initializeBox();
+    super.initState();
+  }
+
+  initializeBox() async {
+    _feedBox = await Hive.openBox(Constants.FEED_DB);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +72,12 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   Widget _getTitle() {
     return TextFormField(
       controller: _titleController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Enter Title";
+        }
+        return null;
+      },
       decoration: InputDecoration(
         hintText: "Enter title",
         border: _getBorder(Colors.black),
@@ -69,7 +89,13 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
 
   Widget _getDescription() {
     return TextFormField(
-      controller: _searchController,
+      controller: _discriptionController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Enter Description";
+        }
+        return null;
+      },
       decoration: InputDecoration(
         hintText: "Enter Description",
         border: _getBorder(Colors.black),
@@ -91,6 +117,23 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   }
 
   Widget _getSaveButton() {
-    return ElevatedButton(onPressed: () {}, child: const Text("Save"));
+    return ElevatedButton(
+        onPressed: () {
+          if (_formState.currentState!.validate()) {
+            _feedBox.add(FeedModel(
+                id: DateTime.now().millisecondsSinceEpoch,
+                description: _discriptionController.text,
+                title: _titleController.text,
+                mediaPath: ""));
+          }
+        },
+        child: const Text("Save"));
+  }
+
+  @override
+  void dispose() {
+    _discriptionController.dispose();
+    _titleController.dispose();
+    super.dispose();
   }
 }

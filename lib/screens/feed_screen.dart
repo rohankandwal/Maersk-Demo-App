@@ -2,6 +2,7 @@ import 'package:demo/screens/add_new_feed_post_screen.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:demo/widgets/feed_child_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -12,6 +13,17 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   final TextEditingController _searchController = TextEditingController();
+  late Box _feedBox;
+
+  @override
+  void initState() {
+    initializeBox();
+    super.initState();
+  }
+
+  initializeBox() async {
+    _feedBox = await Hive.openBox(Constants.FEED_DB);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,5 +115,11 @@ class _FeedScreenState extends State<FeedScreen> {
           );
         },
         itemCount: 10);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
