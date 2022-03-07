@@ -1,8 +1,10 @@
+import 'package:demo/feed_model.dart';
 import 'package:demo/screens/add_new_feed_post_screen.dart';
 import 'package:demo/utils/constants.dart';
 import 'package:demo/widgets/feed_child_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -13,17 +15,6 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   final TextEditingController _searchController = TextEditingController();
-  late Box _feedBox;
-
-  @override
-  void initState() {
-    initializeBox();
-    super.initState();
-  }
-
-  initializeBox() async {
-    _feedBox = await Hive.openBox(Constants.FEED_DB);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +63,8 @@ class _FeedScreenState extends State<FeedScreen> {
           child: _getFeedItems(),
           left: 0,
           right: 0,
-          top: 120, //Todo check error for int conversion
+          top: 120,
+          //Todo check error for int conversion
           bottom: 0,
         )
       ],
@@ -103,10 +95,29 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _getFeedItems() {
-    return ListView.separated(
+    return ValueListenableBuilder(
+        valueListenable: Hive.box<FeedModel>(Constants.FEED_DB).listenable(),
+        builder: (context, Box<FeedModel> box, _) {
+          if (box.values.isEmpty) {
+            return const Center(
+              child: Text("No data"),
+            );
+          }
+          return ListView.builder(
+            itemCount: box.values.length,
+            itemBuilder: (context, index) {
+              return FeedChildWidget(
+                key: UniqueKey(),
+                feedModel: box.getAt(index)!,
+              );
+            },
+          );
+        });
+    /*return ListView.separated(
         itemBuilder: (context, index) {
           return FeedChildWidget(
             key: UniqueKey(),
+            feedModel: _feeds[index],
           );
         },
         separatorBuilder: (context, index) {
@@ -114,7 +125,7 @@ class _FeedScreenState extends State<FeedScreen> {
             height: 10,
           );
         },
-        itemCount: 10);
+        itemCount: _feeds.length);*/
   }
 
   @override

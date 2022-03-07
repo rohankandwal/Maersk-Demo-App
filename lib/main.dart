@@ -1,8 +1,16 @@
+import 'package:demo/database/adapter/feed_model_adapter.dart';
+import 'package:demo/feed_model.dart';
+import 'package:demo/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'screens/feed_screen.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter<FeedModel>(FeedModelAdapter());
+  await Hive.openBox<FeedModel>(Constants.FEED_DB);
   runApp(const MyApp());
 }
 

@@ -23,7 +23,7 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
   }
 
   initializeBox() async {
-    _feedBox = await Hive.openBox(Constants.FEED_DB);
+    _feedBox = Hive.box<FeedModel>(Constants.FEED_DB);
   }
 
   @override
@@ -125,6 +125,7 @@ class _AddNewFeedPostScreenState extends State<AddNewFeedPostScreen> {
                 description: _discriptionController.text,
                 title: _titleController.text,
                 mediaPath: ""));
+            Navigator.pop(context);
           }
         },
         child: const Text("Save"));

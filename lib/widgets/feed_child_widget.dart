@@ -1,9 +1,12 @@
+import 'package:demo/feed_model.dart';
 import 'package:demo/widgets/favorite_button_widget.dart';
 import 'package:demo/widgets/like_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class FeedChildWidget extends StatefulWidget {
-  const FeedChildWidget({Key? key}) : super(key: key);
+  final FeedModel feedModel;
+
+  const FeedChildWidget({Key? key, required this.feedModel}) : super(key: key);
 
   @override
   State<FeedChildWidget> createState() => _FeedChildWidgetState();
@@ -37,15 +40,15 @@ class _FeedChildWidgetState extends State<FeedChildWidget> {
   }
 
   Widget _getTitle() {
-    return const Text(
-      "Title",
+    return Text(
+      widget.feedModel.title,
       style: TextStyle(color: Colors.black, fontSize: 18),
     );
   }
 
   Widget _getDescription() {
-    return const Text(
-      "Description",
+    return Text(
+      widget.feedModel.description,
       style: TextStyle(color: Colors.black, fontSize: 14),
     );
   }
